@@ -1,0 +1,55 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  userId    String   @id
+  username  String   @unique
+  email     String   @unique
+  password  String
+  isAdmin   Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Orders    Order[]  @relation("orders")
+  Carts     Cart[]   @relation("carts")
+}
+
+model Product {
+  productId   String   @id
+  productName String
+  description String
+  image       String   @default("")
+  size        Int
+  color       String
+  price       Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  Orders      Order[]  @relation("productOrders")
+  Carts       Cart[]   @relation("productCarts")
+}
+
+model Order {
+  orderId       String  @id
+  Orders        User    @relation("orders", fields: [userId], references: [userId])
+  userId        String
+  productOrders Product @relation("productOrders", fields: [productId], references: [productId])
+  productId     String
+  quantity      Int
+  amount        Int
+  address       String
+  status        String  @default("pending")
+}
+
+model Cart {
+  cartId       String  @id
+  Carts        User    @relation("carts", fields: [userId], references: [userId])
+  userId       String
+  productCarts Product @relation("productCarts", fields: [productId], references: [productId])
+  productId    String
+  quantity     Int
+}
