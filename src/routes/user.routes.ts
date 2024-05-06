@@ -1,10 +1,10 @@
 import express, { Router } from "express"
-import { verifyUser, verifyadmin } from "../middlewares/auth.middleware"
+import { verifyUser, verifyAdmin } from "../middlewares/auth.middleware"
 import { deleteUser, getAllUsers, getUser, updateUser } from "../controllers/user.controller"
 const router: Router = express()
 
 //GET ALL USERS
-router.get("/", verifyadmin, getAllUsers)
+router.get("/", verifyAdmin, getAllUsers)
 
 //GET A USER
 router.get("/:userId", verifyUser, getUser)

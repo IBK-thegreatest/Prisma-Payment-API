@@ -39,7 +39,7 @@ export const verifyUser = async (req: RequestWithUser, res: Response, next: Next
     })
 }
 
-export const verifyadmin = async (req: RequestWithUser, res: Response, next: NextFunction): Promise<void> => {
+export const verifyAdmin = async (req: RequestWithUser, res: Response, next: NextFunction): Promise<void> => {
     verifyToken(req, res, () => {
         if(req.user.isAdmin) {
             next();

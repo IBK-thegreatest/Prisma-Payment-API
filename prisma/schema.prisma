@@ -21,7 +21,7 @@ model User {
 
 model Product {
   productId   String   @id
-  productName String
+  productName String   @unique
   description String
   image       String   @default("")
   size        Int
