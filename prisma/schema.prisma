@@ -47,7 +47,7 @@ model Order {
 
 model Cart {
   cartId       String  @id
-  Carts        User    @relation("carts", fields: [userId], references: [userId])
+  user         User    @relation("carts", fields: [userId], references: [userId])
   userId       String
   productCarts Product @relation("productCarts", fields: [productId], references: [productId])
   productId    String

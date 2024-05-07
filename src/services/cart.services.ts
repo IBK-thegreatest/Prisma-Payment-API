@@ -47,7 +47,7 @@ export const getCartService = async (userId: string, cartId: string): Promise<Ca
     const user = await prisma.user.findUnique({ where: { userId: userId }})
     if(!user) throw new HttpException(404, "This User does not exist")
     
-    const cart = await prisma.cart.findUnique({ where: { cartId: cartId }})
+    const cart = await prisma.cart.findUnique({ where: { cartId: cartId }, include: { user: true }})
     if(!cart) throw new HttpException(404, "This Cart does not exist")
 
     return cart
@@ -60,9 +60,16 @@ export const updateCartService = async (userId: string, cartId: string, cartData
     
     const cart = await prisma.cart.findUnique({ where: { cartId: cartId }})
     if(!cart) throw new HttpException(404, "This Cart does not exist")
-
-    const updatedUser = await prisma.cart.update({ where: { cartId: cartId }, data: cartData })
-    return updatedUser
+    
+    if(cartData.productName) {
+        const product = await prisma.product.findUnique({ where: { productName: cartData.productName }})
+        if(!product) throw new HttpException(404, "This Product either does not exist and has been disabled")
+        const updatedCart = await prisma.cart.update({ where: { cartId: cartId }, data: { productId: product.productId }})
+        return updatedCart
+    } else {
+        const updatedCart = await prisma.cart.update({ where: { cartId: cartId }, data: cartData })
+        return updatedCart
+    }
 }
 
 //DELETE A CART
